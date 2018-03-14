@@ -1,4 +1,4 @@
-package Heapsort
+package heapsort
 
 /**
  * @author Kostiantyn Prysiazhnyi
@@ -11,6 +11,7 @@ package Heapsort
  * implementation of max-heapify alg with using loop iterations instead of recursive.
  */
 fun <T : Int> efectifyMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<T> {
+    //TODO getLeftLeaf and getRightLeaf can return null if the subRoot pointing on one leaf element of heap
     var leftLeaf: Int = getLeftLeaf(array, subRoot)
     var rightLeaf: Int = getRightLeaf(array, subRoot)
     var index = subRoot
@@ -19,11 +20,10 @@ fun <T : Int> efectifyMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<T
     while (true) {
         indexOfLargestElement = if (leftLeaf <= array.size && array[leftLeaf] > array[subRoot]) {
             leftLeaf
-
         } else {
             subRoot
-
         }
+
         if (rightLeaf <= array.size && array[rightLeaf] > array[indexOfLargestElement]) {
             indexOfLargestElement = rightLeaf
 
@@ -42,13 +42,37 @@ fun <T : Int> efectifyMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<T
     return resultArray
 }
 
-private fun <T> getLeftLeaf(array: ArrayList<T>, root: Int): Int {
-    TODO("implement this method")
-}
+/**
+ * if it is max heapify and there is no left leaf for given root return 0 in case of min-heapify return max Integer value.
+ */
+private fun <T> getLeftLeaf(array: ArrayList<T>, root: Int): Int =
+        if (array.lastIndex <= root) {
+            0
+        } else {
+            val leftLeafIndex = root * 2 + 1
+            if (array.lastIndex >= leftLeafIndex) {
+                leftLeafIndex
+            } else {
+                0
+            }
 
-private fun <T> getRightLeaf(array: ArrayList<T>, root: Int): Int {
-    TODO("implement this method")
-}
+        }
+
+/**
+ * if it is max heapify and there is no right leaf for given root return 0 in case of min-heapify return max Integer value.
+ */
+private fun <T> getRightLeaf(array: ArrayList<T>, root: Int): Int =
+        if (array.lastIndex <= root) {
+            0
+        } else {
+            val leftLeafIndex = root * 2 + 2
+            if (array.lastIndex >= leftLeafIndex) {
+                leftLeafIndex
+            } else {
+                0
+            }
+
+        }
 
 private fun <T> changeElementIndexes(array: ArrayList<T>, firstIndex: Int, indexToChangeWith: Int): ArrayList<T> {
     val temporaryElement = array[firstIndex]
