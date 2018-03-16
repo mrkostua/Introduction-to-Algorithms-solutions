@@ -7,13 +7,17 @@ import kotlin.collections.ArrayList
  * @created on 3/12/2018
  * Task 6.2-5
  */
-//todo update what class T need to inherit
+
 //todo update getRightLeaf and getLeftLeaf fun's (problem with returning 0 in case if there no leaf for given root)
 
 /**
  * implementation of max-heapify alg with using loop iterations instead of recursive.
  */
-fun <T : Int> effectiveMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<T> {
+fun <T : Comparable<T>> effectiveMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<T> {
+    if (subRoot > array.size - 1) {
+        throw IndexOutOfBoundsException("There is no element in array under this index")
+
+    }
     var leftLeaf: Int = getLeftLeaf(array, subRoot)
     var rightLeaf: Int = getRightLeaf(array, subRoot)
     var index = subRoot
@@ -49,7 +53,9 @@ fun <T : Int> effectiveMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<
             break
 
         }
-        println("resultArray : forEach : " + resultArray.forEach({ i -> print(i.toString() + " ") }))
+        print("resultArray : ")
+        resultArray.forEach({ i -> print(i.toString() + " ") })
+        println("\n")
 
     }
 
@@ -98,38 +104,46 @@ private fun <T> changeElementIndexes(array: ArrayList<T>, firstIndex: Int, index
     return array
 }
 
-
-private fun <T> printHeap(heapArray: ArrayList<T>) {
+private fun <T> printHeap(heapArray: ArrayList<T>, elementLength: Int) {
     var jumpNumber = 0
     var jumpPower = 1.0
-    var amountOfSpaces = (Math.pow(2.0, (countHeapHeight(heapArray.size) - 1).toDouble()) / 2).toInt()
+    var maxAmountOfSpaces = (Math.pow(2.0, (countHeapHeight(heapArray.size) - 1).toDouble())).toInt() * elementLength
+    maxAmountOfSpaces += (maxAmountOfSpaces - 1)
+    var leafAmountOfSpace = maxAmountOfSpaces
     var spaceIncrementer = 0
+
+    var sElemnent: String
     for ((index, element) in heapArray.withIndex()) {
+        sElemnent = if (element.toString().length < 2) element.toString() + " "
+        else element.toString()
         if (index == 0) {
             //space after root element
-            print(generateStringWithSpaces(amountOfSpaces, 5) + element.toString() + "(" + index + ")" + generateStringWithSpaces(amountOfSpaces, 5))
+            print(generateStringWithSpaces((maxAmountOfSpaces - elementLength) / 2, 1) + sElemnent)
 
         } else {
-            print(generateStringWithSpaces(amountOfSpaces, 1) + element.toString() + "(" + index + ")" + generateStringWithSpaces(amountOfSpaces, 1))
+            print(generateStringWithSpaces(leafAmountOfSpace, 1) + sElemnent)
 
         }
-
         if (index == jumpNumber) {
-            println("\n\n")
-            jumpNumber = (jumpNumber + Math.pow(2.0, jumpPower)).toInt()
+            leafAmountOfSpace = (maxAmountOfSpaces - Math.pow(2.0, jumpPower - 1).toInt() * elementLength) / (jumpPower + 1).toInt()
+            println()
+            for (i in 0 until Math.pow(2.0, jumpPower - 1).toInt()) {
+                print(generateStringWithSpaces(leafAmountOfSpace, 1))
+                print("/\\")
+            }
+            println()
+            jumpNumber += Math.pow(2.0, jumpPower).toInt()
             jumpPower++
-            amountOfSpaces--
-            // print(generateStringWithSpaces(amountOfSpaces, 5))
+            leafAmountOfSpace = (maxAmountOfSpaces - Math.pow(2.0, jumpPower - 1).toInt() * elementLength) / (jumpPower + 1).toInt()
             spaceIncrementer++
         }
 
     }
 }
 
-private fun generateStringWithSpaces(amountOfSpaces: Int, spaceLegth: Int): String {
-
+private fun generateStringWithSpaces(amountOfSpaces: Int, spaceLength: Int): String {
     val stringBuilder = StringBuilder()
-    for (i in 0 until amountOfSpaces * spaceLegth) {
+    for (i in 0 until amountOfSpaces * spaceLength) {
         stringBuilder.append(" ")
     }
     return stringBuilder.toString()
@@ -154,10 +168,10 @@ private fun countHeapHeight(heapSize: Int): Int {
 }
 
 fun main(args: Array<String>) {
-    var heapArray = arrayListOf(16, 4, 10, 14, 7, 9, 3, 2, 8, 1)
+    val heapArray = arrayListOf(16, 4, 10, 14, 7, 9, 3, 2, 8, 1, 1, 0, 0, 0)
     println("initial Heap : \n")
-    printHeap(heapArray)
+    printHeap(heapArray, 2)
     println("\n\n after using max-Heapify() : \n")
-    printHeap(effectiveMaxHeapify(heapArray, 1))
+    printHeap(effectiveMaxHeapify(heapArray, 1), 2)
 
 }
