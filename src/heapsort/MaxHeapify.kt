@@ -13,10 +13,8 @@ import kotlin.collections.ArrayList
 /**
  * implementation of max-heapify alg with using loop iterations instead of recursive.
  */
-var heapSize: Int = 0
-
 fun <T : Comparable<T>> effectiveMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<T> {
-    if (subRoot > heapSize - 1) {
+    if (subRoot > array.size - 1) {
         throw IndexOutOfBoundsException("There is no element in array under this index")
 
     }
@@ -27,13 +25,13 @@ fun <T : Comparable<T>> effectiveMaxHeapify(array: ArrayList<T>, subRoot: Int): 
     var resultArray = array
 
     while (true) {
-        indexOfLargestElement = if (leftLeaf <= heapSize && array[leftLeaf] > array[subRoot]) {
+        indexOfLargestElement = if (leftLeaf <= array.size && array[leftLeaf] > array[subRoot]) {
             leftLeaf
         } else {
             index
         }
 
-        if (rightLeaf <= heapSize && array[rightLeaf] > array[indexOfLargestElement]) {
+        if (rightLeaf <= array.size && array[rightLeaf] > array[indexOfLargestElement]) {
             indexOfLargestElement = rightLeaf
 
         }
@@ -99,17 +97,17 @@ private fun <T> getRightLeaf(array: ArrayList<T>, root: Int): Int =
 
         }
 
- fun <T> changeElementIndexes(array: ArrayList<T>, firstIndex: Int, indexToChangeWith: Int): ArrayList<T> {
+private fun <T> changeElementIndexes(array: ArrayList<T>, firstIndex: Int, indexToChangeWith: Int): ArrayList<T> {
     val temporaryElement = array[firstIndex]
     array[firstIndex] = array[indexToChangeWith]
     array[indexToChangeWith] = temporaryElement
     return array
 }
 
-fun <T> printHeap(heapArray: ArrayList<T>, elementLength: Int) {
+private fun <T> printHeap(heapArray: ArrayList<T>, elementLength: Int) {
     var jumpNumber = 0
     var jumpPower = 1.0
-    var maxAmountOfSpaces = (Math.pow(2.0, (countHeapHeight(heapSize) - 1).toDouble())).toInt() * elementLength
+    var maxAmountOfSpaces = (Math.pow(2.0, (countHeapHeight(heapArray.size) - 1).toDouble())).toInt() * elementLength
     maxAmountOfSpaces += (maxAmountOfSpaces - 1)
     var leafAmountOfSpace = maxAmountOfSpaces
     var spaceIncrementer = 0
@@ -171,7 +169,6 @@ private fun countHeapHeight(heapSize: Int): Int {
 
 fun main(args: Array<String>) {
     val heapArray = arrayListOf(16, 4, 10, 14, 7, 9, 3, 2, 8, 1, 1, 0, 0, 0)
-    heapSize = heapArray.size // for local testing
     println("initial Heap : \n")
     printHeap(heapArray, 2)
     println("\n\n after using max-Heapify() : \n")
