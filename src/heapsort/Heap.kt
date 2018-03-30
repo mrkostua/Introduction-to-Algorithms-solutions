@@ -15,57 +15,53 @@ class Heap<T : Comparable<T>>(data: ArrayList<T>) {
 
     fun heapSort(): ArrayList<T> {
         buildMaxHeap()
-       /* for (i in resultArray.size - 1 downTo 1) {
-            println("       LOG------------------------- heapSort loop index : " + i)
-            changeElementIndexes(resultArray, 0, i)
+        for (i in resultArray.lastIndex downTo 1) {
+            changeElementIndexes(0, i)
             heapSize--
-            effectiveMaxHeapify(resultArray, 0)
-        }*/
+            effectiveMaxHeapify(0)
+        }
         return resultArray
     }
 
     private fun buildMaxHeap() {
-        println("   buildMaxHeap()")
-        for (i in resultArray.size / 2 downTo 0) {
-            println("       LOG------------------------- buildMaxHeap loop index : " + i)
+        for (i in (resultArray.size - 1) / 2 downTo 0) {
             effectiveMaxHeapify(resultArray, i)
 
         }
     }
 
-
-    private fun effectiveMaxHeapify(array: ArrayList<T>, subRoot: Int): ArrayList<T> {
-        if (subRoot > heapSize - 1) {
-            throw IndexOutOfBoundsException("There is no element in array under this index")
+    private fun effectiveMaxHeapify(subRoot: Int): ArrayList<T> {
+        val heapLastIndex = heapSize - 1
+        if (subRoot > heapLastIndex) {
+            throw IndexOutOfBoundsException("There is no element in resultArray under this index")
 
         }
-        var leftLeaf: Int = getLeftLeaf(array, subRoot)
-        var rightLeaf: Int = getRightLeaf(array, subRoot)
+        var leftLeaf: Int = getLeftLeaf(subRoot)
+        var rightLeaf: Int = getRightLeaf(subRoot)
         var index = subRoot
         var indexOfLargestElement: Int
-        var resultArray = array
 
         while (true) {
-            indexOfLargestElement = if (leftLeaf <= heapSize && array[leftLeaf] > array[subRoot]) {
+            indexOfLargestElement = if (leftLeaf <= heapLastIndex && resultArray[leftLeaf] > resultArray[index]) {
                 leftLeaf
             } else {
                 index
             }
 
-            if (rightLeaf <= heapSize && array[rightLeaf] > array[indexOfLargestElement]) {
+            if (rightLeaf <= heapLastIndex && resultArray[rightLeaf] > resultArray[indexOfLargestElement]) {
                 indexOfLargestElement = rightLeaf
 
             }
             println("index : " + index)
             println("index of large element : " + indexOfLargestElement)
-            println("right leaf : " + rightLeaf)
-            println("left leaf : " + leftLeaf)
+            println("right leaf index : " + rightLeaf)
+            println("left leaf index : " + leftLeaf)
 
             if (index != indexOfLargestElement) {
-                resultArray = changeElementIndexes(array, index, indexOfLargestElement)
+                changeElementIndexes(index, indexOfLargestElement)
                 index = indexOfLargestElement
-                leftLeaf = getLeftLeaf(array, index)
-                rightLeaf = getRightLeaf(array, index)
+                leftLeaf = getLeftLeaf(index)
+                rightLeaf = getRightLeaf(index)
 
                 println("after moving index of large element : " + indexOfLargestElement)
                 println("after moving right leaf : " + rightLeaf)
@@ -75,7 +71,7 @@ class Heap<T : Comparable<T>>(data: ArrayList<T>) {
 
             }
             print("resultArray : ")
-            resultArray.forEach({ i -> print(i.toString() + " ") })
+            resultArray.forEach { print(it.toString() + " ") }
             println("\n")
 
         }
@@ -87,12 +83,12 @@ class Heap<T : Comparable<T>>(data: ArrayList<T>) {
      * if it is max heapify and there is no left leaf for given root return -1 in case of min-heapify return max Integer value.
      */
     //TODO update getRightLeaf and getLeftLeaf fun's (problem with returning 0 in case if there no leaf for given root)
-    private fun getLeftLeaf(array: ArrayList<T>, root: Int): Int =
-            if (array.lastIndex <= root) {
+    private fun getLeftLeaf(root: Int): Int =
+            if (heapSize - 1 <= root) {
                 Int.MAX_VALUE
             } else {
                 val leftLeafIndex = root * 2 + 1
-                if (array.lastIndex >= leftLeafIndex) {
+                if (heapSize - 1 >= leftLeafIndex) {
                     leftLeafIndex
                 } else {
                     Int.MAX_VALUE
@@ -104,13 +100,13 @@ class Heap<T : Comparable<T>>(data: ArrayList<T>) {
     /**
      * if it is max heapify and there is no right leaf for given root return 0 in case of min-heapify return max Integer value.
      */
-    private fun getRightLeaf(array: ArrayList<T>, root: Int): Int =
-            if (array.lastIndex <= root) {
+    private fun getRightLeaf(root: Int): Int =
+            if (heapSize - 1 <= root) {
                 Int.MAX_VALUE
 
             } else {
                 val leftLeafIndex = root * 2 + 2
-                if (array.lastIndex >= leftLeafIndex) {
+                if (heapSize - 1 >= leftLeafIndex) {
                     leftLeafIndex
                 } else {
                     Int.MAX_VALUE
@@ -119,11 +115,10 @@ class Heap<T : Comparable<T>>(data: ArrayList<T>) {
 
             }
 
-    private fun changeElementIndexes(array: ArrayList<T>, firstIndex: Int, indexToChangeWith: Int): ArrayList<T> {
-        val temporaryElement = array[firstIndex]
-        array[firstIndex] = array[indexToChangeWith]
-        array[indexToChangeWith] = temporaryElement
-        return array
+    private fun changeElementIndexes(firstIndex: Int, indexToChangeWith: Int) {
+        val temporaryElement = resultArray[firstIndex]
+        resultArray[firstIndex] = resultArray[indexToChangeWith]
+        resultArray[indexToChangeWith] = temporaryElement
     }
 
 
@@ -156,7 +151,7 @@ class Heap<T : Comparable<T>>(data: ArrayList<T>) {
     fun printHeap(elementLength: Int) {
         var jumpNumber = 0
         var jumpPower = 1.0
-        var maxAmountOfSpaces = (Math.pow(2.0, (countHeapHeight(heapSize) - 1).toDouble())).toInt() * elementLength
+        var maxAmountOfSpaces = (Math.pow(2.0, (countHeapHeight(resultArray.size) - 1).toDouble())).toInt() * elementLength
         maxAmountOfSpaces += (maxAmountOfSpaces - 1)
         var leafAmountOfSpace = maxAmountOfSpaces
         var spaceIncrementer = 0
@@ -195,7 +190,7 @@ class Heap<T : Comparable<T>>(data: ArrayList<T>) {
 fun main(args: Array<String>) {
     println("Initial data : \n")
     var array = ArrayList<Int>()
-    for (i in 1..5) {
+    for (i in 0..9) {
         array.add(i)
 
     }

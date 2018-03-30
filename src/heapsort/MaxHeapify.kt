@@ -25,7 +25,7 @@ fun <T : Comparable<T>> effectiveMaxHeapify(array: ArrayList<T>, subRoot: Int): 
     var resultArray = array
 
     while (true) {
-        indexOfLargestElement = if (leftLeaf <= array.size && array[leftLeaf] > array[subRoot]) {
+        indexOfLargestElement = if (leftLeaf <= array.size && array[leftLeaf] > array[index]) {
             leftLeaf
         } else {
             index
